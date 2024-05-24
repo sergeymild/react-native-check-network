@@ -14,27 +14,24 @@ interface CheckNetworkType {
   stopListen(): void
 }
 
-//const {CheckNetwork} = NativeModules
-
 class CheckNetwork implements CheckNetworkType {
   private eventEmitter = new NativeEventEmitter(NativeModules.CheckNetwork)
   private events: Array<EmitterSubscription> = []
 
-  isReachable = (): Promise<boolean> => {
-    return NativeModules.CheckNetwork.isReachable()
+  isReachable = async (): Promise<boolean> => {
+    return await NativeModules.CheckNetwork.isReachable()
   }
 
   onNetworkChange = () => {}
 
-  startListen = (listener: (isReachable: Status) => void) => {
+  startListen = async (listener: (isReachable: Status) => void): Promise<boolean> => {
     this.events.push(this.eventEmitter.addListener('onNetworkChange', listener))
-
-    NativeModules.CheckNetwork.startListen()
+    return await NativeModules.CheckNetwork.startListen()
   }
 
-  stopListen = () => {
+  stopListen = async () => {
     this.events.forEach((e) => e.remove())
-    NativeModules.CheckNetwork.stopListen()
+    await NativeModules.CheckNetwork.stopListen()
   }
 }
 

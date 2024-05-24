@@ -19,8 +19,10 @@ class CheckNetwork: RCTEventEmitter {
     override func stopObserving() { hasListeners = false }
     
     @objc
-    func startListen() {
-        networkManager?.startListening()
+    func startListen(
+        _ resolver: @escaping RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) {
         networkManager?.listener = { [weak self] status in
             guard let self = self else { return }
             debugPrint("networkManager?.listener", self.hasListeners, status)
@@ -29,20 +31,28 @@ class CheckNetwork: RCTEventEmitter {
             case .notReachable:
                 let body = ["isReachable": false]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
+                resolver(false)
             case .reachable:
                 let body = ["isReachable": true]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
+                resolver(true)
             case .unknown:
                 let body = ["isReachable": false]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
+                resolver(false)
             }
         }
+        networkManager?.startListening()
     }
     
     @objc
-    func stopListen() {
+    func stopListen(
+        _ resolver: RCTPromiseResolveBlock,
+        rejecter: RCTPromiseRejectBlock
+    ) {
         networkManager?.listener = nil
         networkManager?.stopListening()
+        resolver(nil)
     }
     
     @objc

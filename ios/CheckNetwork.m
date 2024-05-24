@@ -6,7 +6,9 @@
 RCT_EXTERN_METHOD(isReachable:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 
-RCT_EXTERN_METHOD(startListen)
-RCT_EXTERN_METHOD(stopListen)
+RCT_EXTERN_METHOD(startListen:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(stopListen:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
 
 @end

@@ -39,11 +39,4 @@ class NetworkReachabilityManager: ConnectivityManager.NetworkCallback() {
   override fun onLost(network: Network) {
     listener?.invoke(false)
   }
-
-  fun isNetworkAvailable(context: Context): Boolean {
-    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val networkInfo = cm.activeNetworkInfo
-    return networkInfo?.isConnected == true
-  }
 }
-
