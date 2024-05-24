@@ -5,17 +5,23 @@ Check network accessability
 ## Installation
 
 ```sh
-npm install react-native-check-network
+"react-native-check-network":"sergeymild/react-native-check-network#1.0.0"
 ```
 
 ## Usage
 
 ```js
-import CheckNetwork from "react-native-check-network";
+import {checkNetwork} from 'react-native-check-network'
 
 // ...
 
-const result = await CheckNetwork.multiply(3, 7);
+let isNetworkAvailable = await checkNetwork.startListen((s) => {
+    // update availability in realtime
+    isNetworkAvailable = s.isReachable
+})
+
+// later in code
+await checkNetwork.stopListen()
 ```
 
 ## Contributing
