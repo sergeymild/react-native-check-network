@@ -23,24 +23,26 @@ class CheckNetwork: RCTEventEmitter {
         _ resolver: @escaping RCTPromiseResolveBlock,
         rejecter: RCTPromiseRejectBlock
     ) {
+        var didResolved = false
         networkManager?.listener = { [weak self] status in
-            guard let self = self else { return }
+            guard let self else { return }
             debugPrint("networkManager?.listener", self.hasListeners, status)
             if !self.hasListeners { return }
             switch status {
             case .notReachable:
                 let body = ["isReachable": false]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
-                resolver(false)
+                if !didResolved { resolver(false) }
             case .reachable:
                 let body = ["isReachable": true]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
-                resolver(true)
+                if !didResolved { resolver(true) }
             case .unknown:
                 let body = ["isReachable": false]
                 self.sendEvent(withName: self.onNetworkChangeEventName, body: body)
-                resolver(false)
+                if !didResolved { resolver(false) }
             }
+            didResolved = true
         }
         networkManager?.startListening()
     }
