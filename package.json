@@ -1,6 +1,6 @@
 {
   "name": "react-native-check-network",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React Native check network accessibility",
   "main": "src/index.ts",
   "module": "src/index.ts",
