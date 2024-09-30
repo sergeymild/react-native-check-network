@@ -24,9 +24,21 @@ class CheckNetwork implements CheckNetworkType {
 
   onNetworkChange = () => {}
 
+  private checkGoogle204 = async () => {
+    try {
+      const response = await fetch('https://clients3.google.com/generate_204', {method: 'HEAD'})
+      return response.ok
+    } catch (e) {
+      return false
+    }
+  }
+
   startListen = async (listener: (isReachable: Status) => void): Promise<boolean> => {
     this.events.push(this.eventEmitter.addListener('onNetworkChange', listener))
-    return await NativeModules.CheckNetwork.startListen()
+    const result = await Promise.race<boolean | string>([NativeModules.CheckNetwork.startListen(), new Promise(resolve => setTimeout(() => resolve('race'), 1000))])
+    if (typeof result === 'boolean') return result
+    return await this.checkGoogle204()
+
   }
 
   stopListen = async () => {
